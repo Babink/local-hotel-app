@@ -1,12 +1,12 @@
 
 
 interface ICustomer{
-    id: number
-    firstName: string
-    lastName: string
+    id?: string
+    firstName?: string
+    lastName?: string
     permanentAddress?: string
-    temporaryAddress: string
-    contactNumber: number
+    temporaryAddress?: string
+    contactNumber?: string
 }
 
 
