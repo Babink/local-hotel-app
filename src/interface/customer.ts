@@ -6,7 +6,7 @@ interface ICustomer{
     lastName: string
     permanentAddress?: string
     temporaryAddress: string
-    contactNumber: number
+    contactNumber: string
 }
 
 

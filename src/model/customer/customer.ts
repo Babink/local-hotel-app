@@ -24,7 +24,7 @@ const CustomerSchema: any = new mongoose.Schema({
     },
 
     contactNumber: {
-        type: Number,
+        type: String,
         required: false,
         trim: true
     }
