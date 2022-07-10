@@ -1,7 +1,7 @@
 
 
 interface ICustomer{
-    id: number
+    id?: string
     firstName: string
     lastName: string
     permanentAddress?: string

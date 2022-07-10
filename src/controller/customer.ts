@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
-import { customerModel } from '../model/customer/customer'
+import { ICustomer } from '../interface/customer'
+import { IServerRes } from '../interface/serverResponse'
+import { CustomerService } from '../services/customer'
 
-class CustomerController{
+class CustomerController {
     getAllCustomers(req: Request, res: Response): void {
         console.log("Return all customer list")
     }
@@ -14,27 +16,43 @@ class CustomerController{
 
     addCustomer(req: Request, res: Response): void {
         console.log("[log] Getting data from client....")
-        const { firstName, lastName }: {firstName: string, lastName: string} = req.body;
+        const { firstName, lastName }: { firstName: string, lastName: string } = req.body;
 
-        if(firstName && lastName){
-            const result: any =  new customerModel({
+        if (firstName && lastName) {
+            const customer: ICustomer = {
                 firstName,
-                lastName
-            })
+                lastName,
+                temporaryAddress: "Kapan",
+                contactNumber: 9823379007
+            }
 
-            result.save()
-                .then((docs: any) => {
-                    res.send(docs)
+            const SCustomer: CustomerService = new CustomerService(customer);
+            SCustomer.addCustomerToDB()
+                .then((docs: IServerRes) => {
+                    res.send(docs);
                 })
                 .catch((e: any) => {
-                    res.send({ "mssg": e.message })
+                    const responseMessage: IServerRes = {
+                        isFailed: true,
+                        isSuccess: false,
+                        statusCode: 400,
+                        messageTitle: "Incomplete informataion provided",
+                        messageDescription: "Please provide all required information"
+                    }
+                    res.send(responseMessage)
                 })
         }
 
-        else{
-            res.send({
-                "mesg": "please provide first and last name"
-            })
+        else {
+            const responseMessage: IServerRes = {
+                isFailed: true,
+                isSuccess: false,
+                statusCode: 400,
+                messageTitle: "Incomplete informataion provided",
+                messageDescription: "Please provide all required information"
+            }
+
+            res.send(responseMessage)
         }
     }
 }

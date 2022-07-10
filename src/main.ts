@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import * as dotenv from 'dotenv'
 import {dbConnectionLog} from './model/db';
 import CustomerRouter from './routes/customer'
+import OwnerRouter from './routes/owner'
 
 
 dotenv.config();
@@ -12,7 +13,7 @@ dbConnectionLog();
 
 app.use(bodyParser.json());
 app.use("/api/v1/customer", CustomerRouter);
-app.use("/api/v1/owner")
+app.use("/api/v1/owner", OwnerRouter);
 
 
 app.listen(port, () => {
