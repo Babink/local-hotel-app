@@ -20,13 +20,16 @@ class IEncoder {
                 return this.encodeCustomerRawToInterface();
 
             case EncoderE.owner:
-                return false
+                return this.encodeOwnerRawToInterface()
 
             default:
                 return false
         }
     }
 
+
+
+    // customer encoder
     private encodeCustomerRawToInterface(): ICustomer | ICustomer[] {
         return this.type === 'array'
             ?
@@ -84,6 +87,22 @@ class IEncoder {
         }
 
         return customer;
+    }
+
+
+
+    // owner encoder
+    private encodeOwnerRawToInterface(): boolean {
+        return false;
+    }
+
+    private filterArrayDataTypeOwner(): void{
+
+    }
+
+
+    private filterObjectDataTypeOwner(): void{
+
     }
 }
 

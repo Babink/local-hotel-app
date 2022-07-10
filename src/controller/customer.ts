@@ -6,13 +6,7 @@ import { CustomerService } from '../services/customer'
 class CustomerController {
 
     getAllCustomers(req: Request, res: Response): void {
-        console.log("[log] Getting all customer records");
-        let customer: ICustomer = {
-            firstName: '',
-            lastName: "",
-            temporaryAddress: "",
-            contactNumber: "00000000"
-        };
+        let customer: ICustomer = {};
 
         new CustomerService(customer)
             .getAllCustomer()
@@ -22,7 +16,15 @@ class CustomerController {
 
 
     getACustomer(req: Request, res: Response): void {
-        console.log("Get single customer")
+        const id: any = req.query.id != undefined ? req.query.id: "";
+        const customer: ICustomer = {
+            id
+        }
+
+        const customerService: CustomerService = new CustomerService(customer);
+        customerService.getACustomer()
+            .then((docs: IServerRes) => res.send(docs))
+            .catch((e: IServerRes) => res.send(e))
     }
 
 
@@ -62,6 +64,60 @@ class CustomerController {
 
             res.send(responseMessage)
         }
+    }
+
+
+    deleteCustomer(req: Request, res: Response): void {
+        const id: any  = req.query.id != undefined ? req.query.id : "";
+
+        if(id.length >= 5){
+            const customer: ICustomer = {
+                id
+            }
+
+            const SCustomer: CustomerService = new CustomerService(customer);
+            SCustomer.deleteCustomer()
+                .then((docs: IServerRes) => res.send(docs))
+                .catch((e: IServerRes) => res.send(e))
+        }
+
+        else{
+            const serverResponse: IServerRes = {
+                isSuccess: false,
+                isFailed: true,
+                statusCode: 401,
+                messageTitle: "Invalid ID",
+                messageDescription: "provide correct ID in-order to delete"
+            }
+
+            res.send(serverResponse);
+        }
+    }
+
+
+    updateCustomer(req: Request, res: Response): void {
+        const {
+            id,
+            firstName,
+            lastName,
+            permanentAddress,
+            temporaryAddress,
+            contactNumber
+        } = req.body;
+
+        const customer: ICustomer = {
+            id,
+            firstName,
+            lastName,
+            permanentAddress,
+            temporaryAddress,
+            contactNumber
+        }
+
+        const SCustomer = new CustomerService(customer);
+        SCustomer.updateCustomer()
+            .then((docs: IServerRes) => res.send(docs))
+            .catch((e: IServerRes) => res.send(e))
     }
 }
 
