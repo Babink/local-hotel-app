@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Connection } from 'mongoose'
 
 mongoose.Promise = global.Promise
 mongoose.connect('mongodb://localhost:27017', {
@@ -7,5 +7,19 @@ mongoose.connect('mongodb://localhost:27017', {
     autoIndex: false
 });
 
+function dbConnectionLog(): void {
+    const dbConnection: Connection = mongoose.connection;
 
-export default mongoose;
+    dbConnection.once("open", () => {
+        console.log("[Log] Successfully connected to mongo database...")
+    })
+
+    dbConnection.on("error", () => {
+        console.log("[Log] Error while connecting to database....")
+    })
+
+}
+
+export {
+    dbConnectionLog
+}
