@@ -2,7 +2,10 @@
 
 enum EncoderE{
     customer="cust",
-    owner="owr"
+    owner="owr",
+
+    arr="array",
+    obj="object"
 }
 
 export {

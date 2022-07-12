@@ -1,5 +1,6 @@
 import { EncoderE } from './enum/encoder'
 import { ICustomer } from '../interface/customer'
+import { IOwner } from '../interface/owner'
 
 class IEncoder {
     private encode: string
@@ -14,7 +15,7 @@ class IEncoder {
     }
 
 
-    runEncoder(): ICustomer | ICustomer[] | Boolean {
+    runEncoder(): Boolean | ICustomer | ICustomer[] | IOwner | IOwner[] {
         switch (this.encode) {
             case EncoderE.customer:
                 return this.encodeCustomerRawToInterface();
@@ -31,7 +32,7 @@ class IEncoder {
 
     // customer encoder
     private encodeCustomerRawToInterface(): ICustomer | ICustomer[] {
-        return this.type === 'array'
+        return this.type === EncoderE.arr
             ?
             this.filterArrayDataType()
             :
@@ -42,23 +43,7 @@ class IEncoder {
         const customers: ICustomer[] = [];
 
         this._resource.map((docs: any) => {
-            let {
-                _id,
-                firstName,
-                lastName,
-                permanentAddress,
-                temporaryAddress,
-                contactNumber
-            } = docs;
-
-            const customer: ICustomer = {
-                id: _id,
-                firstName,
-                lastName,
-                permanentAddress,
-                temporaryAddress,
-                contactNumber
-            }
+            const customer: ICustomer = this.convertCustomerData(docs);
 
             customers.push(customer);
         })
@@ -67,6 +52,10 @@ class IEncoder {
     }
 
     private filterObjectDataType(): ICustomer {
+        return this.convertCustomerData(this._resource);
+    }
+
+    private convertCustomerData(docs: any): ICustomer{
         let {
             _id,
             firstName,
@@ -74,7 +63,7 @@ class IEncoder {
             permanentAddress,
             temporaryAddress,
             contactNumber
-        } = this._resource;
+        } = docs;
 
 
         const customer: ICustomer = {
@@ -92,17 +81,47 @@ class IEncoder {
 
 
     // owner encoder
-    private encodeOwnerRawToInterface(): boolean {
-        return false;
+    private encodeOwnerRawToInterface(): IOwner | IOwner[] {
+        return this.type === EncoderE.arr ?
+            this.filterArrayDataTypeOwner()
+            : this.filterObjectDataTypeOwner()
     }
 
-    private filterArrayDataTypeOwner(): void{
+    private filterArrayDataTypeOwner(): IOwner[] {
+        const owners: IOwner[] = [];
 
+        this._resource.map((docs: any) => {
+            const owner: IOwner = this.convertOwnerData(docs)
+
+            owners.push(owner);
+        })
+
+        return owners;
     }
 
 
-    private filterObjectDataTypeOwner(): void{
+    private filterObjectDataTypeOwner(): IOwner {
+        return this.convertOwnerData(this._resource)
+    }
 
+    private convertOwnerData(docs: any): IOwner{
+        const {
+            _id,
+            userName,
+            isMainOwner,
+            password,
+            contactNumber
+        } = docs;
+
+        const owner: IOwner = {
+            id: _id,
+            userName,
+            isMainOwner,
+            password,
+            contactNumber
+        }
+
+        return owner;
     }
 }
 

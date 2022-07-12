@@ -37,10 +37,10 @@ class CustomerService implements ICustomerService {
 
 
     async getACustomer(): Promise<IServerRes> {
-        if (this.customer.id) {
+        if (isValidObjectId(this.customer.id)) {
             try {
                 const docs = await customerModel.findOne({ _id: this.customer.id })
-                this.encoder = new IEncoder(EncoderE.customer, docs, 'object');
+                this.encoder = new IEncoder(EncoderE.customer, docs, EncoderE.obj);
 
                 return this.serverResponse = {
                     _resource: this.encoder.runEncoder(),
@@ -120,7 +120,7 @@ class CustomerService implements ICustomerService {
     async getAllCustomer(): Promise<IServerRes> {
         try {
             const customerDocs: any = await customerModel.find();
-            this.encoder = new IEncoder(EncoderE.customer, customerDocs, 'array');
+            this.encoder = new IEncoder(EncoderE.customer, customerDocs, EncoderE.arr);
 
             return customerDocs ?
                 this.serverResponse = {

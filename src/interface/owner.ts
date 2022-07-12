@@ -1,10 +1,11 @@
 
 
 interface IOwner{
-    id: number
-    userName: string
-    contactNumber: number
-    isMainOwner: boolean
+    id: string
+    userName?: string
+    contactNumber?: string
+    password?: string
+    isMainOwner?: boolean
 }
 
 
