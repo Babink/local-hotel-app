@@ -1,4 +1,7 @@
-
+interface IOwnerToken{
+    accessToken: string
+    refreshToken: string
+}
 
 interface IOwner{
     id: string
@@ -6,9 +9,11 @@ interface IOwner{
     contactNumber?: string
     password?: string
     isMainOwner?: boolean
+    tokens?: IOwnerToken[]
 }
 
 
 export {
-    IOwner
+    IOwner,
+    IOwnerToken
 }

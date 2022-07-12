@@ -110,7 +110,8 @@ class IEncoder {
             userName,
             isMainOwner,
             password,
-            contactNumber
+            contactNumber,
+            tokens
         } = docs;
 
         const owner: IOwner = {
@@ -118,7 +119,8 @@ class IEncoder {
             userName,
             isMainOwner,
             password,
-            contactNumber
+            contactNumber,
+            tokens
         }
 
         return owner;

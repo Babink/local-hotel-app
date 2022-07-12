@@ -44,6 +44,7 @@ class OwnerService implements IOwnerService {
 
 
             const ownerResponse: any = await docs.save();
+            // const tokenRespnse: any = await ownerResponse.generateToken();
             this.encoder = new IEncoder(EncoderE.owner, ownerResponse, EncoderE.obj);
 
             return this.serverResponse = {
