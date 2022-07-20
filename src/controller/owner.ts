@@ -145,6 +145,21 @@ class OwnerController {
             res.send(serverResponse);
         }
     }
+
+
+    loginUser(req: Request, res: Response): void {
+        const { userName, password } = req.body;
+        const owner: IOwner = {
+            id: "x",
+            userName,
+            password
+        }
+
+        new OwnerService(owner)
+            .logOwnerIn()
+            .then((docs: IServerRes) => res.send(docs))
+            .catch((e: IServerRes) => res.send(e));
+    }
 }
 
 

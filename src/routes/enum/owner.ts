@@ -4,7 +4,8 @@ enum OwnerE{
     plural="owners",
     post="add",
     delete="delete",
-    patch="update"
+    patch="update",
+    loginOwner="login"
 }
 
 export {

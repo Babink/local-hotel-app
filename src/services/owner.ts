@@ -5,6 +5,8 @@ import { IEncoder } from '../interface/encoder'
 import { EncoderE } from '../interface/enum/encoder'
 
 
+// @Todo --> create a function which validate mobile number (specially for nepali number)
+
 interface IOwnerService {
     owner: IOwner
     serverResponse?: IServerRes
@@ -15,6 +17,8 @@ interface IOwnerService {
     getSingleOwner(): Promise<IServerRes>
     deleteOwner(): Promise<IServerRes>
     updateOwner(): Promise<IServerRes>
+
+    logOwnerIn(): Promise<IServerRes>
 }
 
 
@@ -68,7 +72,7 @@ class OwnerService implements IOwnerService {
     }
 
     async getSingleOwner(): Promise<IServerRes> {
-        try{
+        try {
             const docs: any = await ownerModel.findOne({ _id: this.owner.id })
             this.encoder = new IEncoder(EncoderE.owner, docs, EncoderE.obj);
 
@@ -82,7 +86,7 @@ class OwnerService implements IOwnerService {
             }
         }
 
-        catch(e: any){
+        catch (e: any) {
             return this.serverResponse = {
                 isFailed: true,
                 isSuccess: false,
@@ -95,7 +99,7 @@ class OwnerService implements IOwnerService {
 
 
     async getAllOwners(): Promise<IServerRes> {
-        try{
+        try {
             const docs = await ownerModel.find();
             this.encoder = new IEncoder(EncoderE.owner, docs, EncoderE.arr);
             return this.serverResponse = {
@@ -106,8 +110,8 @@ class OwnerService implements IOwnerService {
                 messageDescription: "SUccessfully retrieved all owner records",
                 _resource: this.encoder.runEncoder()
             }
-        }   
-        catch(e: any){
+        }
+        catch (e: any) {
             return this.serverResponse = {
                 isFailed: true,
                 isSuccess: false,
@@ -115,13 +119,13 @@ class OwnerService implements IOwnerService {
                 messageDescription: e.message,
                 messageTitle: "Failed to retrieve all owner records"
             }
-        } 
+        }
     }
 
 
     async deleteOwner(): Promise<IServerRes> {
-        try{
-            const docs: any = await ownerModel.deleteOne({_id: this.owner.id});
+        try {
+            const docs: any = await ownerModel.deleteOne({ _id: this.owner.id });
             return this.serverResponse = {
                 isFailed: false,
                 isSuccess: true,
@@ -131,8 +135,8 @@ class OwnerService implements IOwnerService {
                 _resource: docs
             };
         }
-        catch(e: any){
-            return this.serverResponse={
+        catch (e: any) {
+            return this.serverResponse = {
                 isFailed: true,
                 isSuccess: false,
                 statusCode: 401,
@@ -145,7 +149,7 @@ class OwnerService implements IOwnerService {
 
     // @Todo: Track which item was updated by owner and pass it to description
     async updateOwner(): Promise<IServerRes> {
-        try{
+        try {
             const docs: any = await ownerModel.updateOne({ _id: this.owner.id }, this.owner)
             return this.serverResponse = {
                 isFailed: false,
@@ -156,8 +160,8 @@ class OwnerService implements IOwnerService {
                 _resource: docs
             };
         }
-        catch(e: any){
-            return this.serverResponse={
+        catch (e: any) {
+            return this.serverResponse = {
                 isFailed: true,
                 isSuccess: false,
                 statusCode: 401,
@@ -167,7 +171,32 @@ class OwnerService implements IOwnerService {
         }
     }
 
-    
+    async logOwnerIn(): Promise<IServerRes> {
+        try {
+            const docs: any = await ownerModel.verfiyOwner(this.owner.userName, this.owner.password);
+            this.encoder = new IEncoder(EncoderE.owner, docs, EncoderE.obj)
+
+            return this.serverResponse = {
+                isFailed: false,
+                isSuccess: true,
+                statusCode: 201,
+                messageTitle: "Successfully logged-in",
+                messageDescription: `Owner: ${this.owner.userName} has successfully loggedin into the server.`,
+                _resource: this.encoder.runEncoder()
+            }
+        }
+        catch (e: any) {
+            return this.serverResponse = {
+                isFailed: true,
+                isSuccess: false,
+                statusCode: 401,
+                messageTitle: "Unable to login owner currently",
+                messageDescription: e.message
+            }
+        }
+    }
+
+
 
 
 }
